@@ -1,10 +1,7 @@
 package com.alfaCentauri;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +10,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.poi.ss.usermodel.DateUtil;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.util.Iterator;
 
 public class TransformadorXLSToCSV {
-    
+
     private FileInputStream file;
 
     private String urlPath;
@@ -66,12 +63,13 @@ public class TransformadorXLSToCSV {
      * @param sheet Type Sheet.
      * @return Return a inputStream.
      **/
-    private InputStream csvConverter(Sheet sheet) {
+    protected InputStream csvConverter(Sheet sheet) {
         String str = new String();
         for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
             String rowString = new String();
-            for (int j = 0; j < 3 && row != null; j++) {
+            int maxColumna = 6;
+            for (int j = 0; j < maxColumna && row != null; j++) {
                 if(row.getCell(j)==null) {
                     rowString = rowString + Utility.BLANK_SPACE + Utility.COMMA;
                 }
@@ -83,6 +81,27 @@ public class TransformadorXLSToCSV {
         }
         System.out.println(str);
         return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Get max columns.
+     * @param sheet Type Sheet.
+     * @return Return a integer with number of columns.
+     **/
+    protected int getLastNumberColumn(Sheet sheet) {
+        int count = 0;
+        Row currentRow = sheet.getRow(0);
+        if ( currentRow != null ) {
+            Iterator iteratorCell = currentRow.cellIterator();
+            while (iteratorCell.hasNext()) {
+                Cell valueCell = currentRow.getCell(count);
+                if (valueCell != null && !valueCell.getStringCellValue().isBlank())
+                    count++;
+                else
+                    break;
+            }
+        }
+        return count;
     }
 
     /**
