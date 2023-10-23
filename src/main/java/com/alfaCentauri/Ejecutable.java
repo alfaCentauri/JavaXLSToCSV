@@ -1,4 +1,5 @@
 package com.alfaCentauri;
+import org.apache.logging.log4j.LogManager;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
@@ -15,6 +16,15 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Ejecutable {
+
+    // Define a static logger variable so that it references the
+    // Logger instance named "Ejecutable".
+    private static final Logger logger = (Logger) LogManager.getLogger(Ejecutable.class);
+
+    /**
+     * Print the contains.
+     * @param sheet tyype Sheet.
+     **/
     public static void echoAsCSV(Sheet sheet) {
         Row row = null;
         for (int i = 0; i < sheet.getLastRowNum(); i++) {
@@ -50,14 +60,14 @@ public class Ejecutable {
                 throw new RuntimeException(e);
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
+            logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
+            logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException ex) {
-                Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
+                logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -26,7 +26,7 @@ public class TransformadorXLSToCSV {
 
     private Cell cell;
 
-    /** **/
+    /** Construct **/
     public TransformadorXLSToCSV() {
         workbook = null;
         sheet = null;
