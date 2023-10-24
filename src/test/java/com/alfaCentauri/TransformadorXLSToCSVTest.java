@@ -25,6 +25,9 @@ class TransformadorXLSToCSVTest {
 
     @BeforeEach
     void setUp() {
+        ruta = "data/prueba.xls";
+        inputStream = null;
+        outputStream = null;
     }
 
     @Test
@@ -166,7 +169,7 @@ class TransformadorXLSToCSVTest {
         try{
             inputStream = new FileInputStream(ruta);
             Workbook workbook = WorkbookFactory.create(inputStream);
-            Sheet sheet = workbook.getSheetAt(0);
+            transformadorXLSToCSV = new TransformadorXLSToCSV(workbook);
             int result = transformadorXLSToCSV.getColumnCount(0);
             assertEquals(6, result);
         } catch( FileNotFoundException ex) {

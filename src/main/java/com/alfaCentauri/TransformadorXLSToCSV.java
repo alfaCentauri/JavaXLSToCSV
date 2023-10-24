@@ -37,6 +37,10 @@ public class TransformadorXLSToCSV {
         urlPath = "pruebas.xlsx";
     }
 
+    public TransformadorXLSToCSV(Workbook wb) {
+        workbook = wb;
+        sheet = workbook.getSheetAt(0);
+    }
     /**
      *
      * @param inputStream
