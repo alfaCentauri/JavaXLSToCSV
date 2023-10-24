@@ -115,7 +115,6 @@ public class TransformadorXLSToCSV {
                 int maxColumnNumbers = this.getColumnCount(i);
                 String rowString = new String();
                 for (int j = 0; j < maxColumnNumbers && row != null; j++) {
-                    cell = row.getCell(0);
                     rowString = getStringToRow(row, rowString, j);
                 }
                 if (rowString.length() > 0)
@@ -129,6 +128,7 @@ public class TransformadorXLSToCSV {
     }
 
     private String getStringToRow(Row row, String rowString, int j) {
+        cell = row.getCell(0);
         if ( cell != null && !cell.getStringCellValue().equals("") ) {
             if (row.getCell(j) == null) {//Refactorizar
                 rowString = rowString + Utility.BLANK_SPACE + Utility.COMMA;
@@ -197,8 +197,8 @@ public class TransformadorXLSToCSV {
     }
 
     /**
-     *
-     * @param idSheet
+     * Get column count.
+     * @param idSheet Type int.
      * @return Return a integer more zero if exist.
      **/
     protected int getColumnCount( int idSheet ) {

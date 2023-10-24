@@ -155,4 +155,33 @@ class TransformadorXLSToCSVTest {
         }
         System.out.println("Prueba OK");
     }
+
+    @Test
+    void getColumnCount_ShouldSuccess() {
+        transformadorXLSToCSV = new TransformadorXLSToCSV();
+        ruta = "data/pruebas.xls";
+        inputStream = null;
+        outputStream = null;
+        //Basic with file exist
+        try{
+            inputStream = new FileInputStream(ruta);
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            int result = transformadorXLSToCSV.getColumnCount(0);
+            assertEquals(6, result);
+        } catch( FileNotFoundException ex) {
+            System.err.println("Falla del metodo. Prueba de FileNotFoundException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch( IOException ex) {
+            System.err.println("Falla del metodo. Prueba de IOException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        System.out.println("Prueba OK");
+    }
 }
