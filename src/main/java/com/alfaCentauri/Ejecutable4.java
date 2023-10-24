@@ -23,8 +23,8 @@ public class Ejecutable4 {
             outputStream = transformadorXLSToCSV.convertxlstoCSV_NotNull(inputStream);
         } catch(IOException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidFormatException e) {
-            throw new RuntimeException(e);
+        } catch (InvalidFormatException ex) {
+            Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 inputStream.close();
