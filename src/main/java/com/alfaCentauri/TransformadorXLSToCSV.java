@@ -60,8 +60,8 @@ public class TransformadorXLSToCSV {
      * @throws IOException
      * @throws InvalidFormatException
      **/
-    public InputStream convertxlstoCSV_NotNull(InputStream inputStream) throws IOException, InvalidFormatException {
-        workbook = WorkbookFactory.create(inputStream);
+    public InputStream convertxlstoCSV_NotNull() throws IOException, InvalidFormatException {
+//        workbook = WorkbookFactory.create(inputStream);
         sheet = workbook.getSheetAt(0);
         return  csvConverter_notNull();
     }

@@ -26,7 +26,6 @@ public class Ejecutable5 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV();
         String ruta = "data/pruebas.xls";
         File archivo = new File("input.xlsx");
         InputStream inputStream = null;
@@ -34,22 +33,19 @@ public class Ejecutable5 {
         try {
             inputStream = new FileInputStream(ruta);
             Workbook wb = WorkbookFactory.create(inputStream);
-
+            TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV(wb);
+            result = transformadorXLSToCSV.convertxlstoCSV_NotNull();
             for (int i = 0; i < wb.getNumberOfSheets(); i++) {
                 System.out.println(wb.getSheetAt(i).getSheetName());
                 echoAsCSV(wb.getSheetAt(i));
             }
-            try {
-                if (inputStream != null ) {
-                    result = transformadorXLSToCSV.convertxlstoCSV(inputStream);
-                }
-                else {
-                    System.out.println("Error: Nulo");
-                }
-            } catch (IOException | InvalidFormatException e) {
-                throw new RuntimeException(e);
+            if (inputStream != null ) {
+                System.out.println("No Nulo");
             }
-        } catch (IOException ex) {
+            else {
+                System.out.println("Error: Nulo");
+            }
+        } catch (IOException | InvalidFormatException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

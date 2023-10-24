@@ -1,6 +1,8 @@
 package com.alfaCentauri;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,13 +16,15 @@ public class Ejecutable4 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV();
+
         String ruta = "data/pruebas.xls";
         InputStream inputStream = null;
         InputStream outputStream = null;
         try{
             inputStream = new FileInputStream(ruta);
-            outputStream = transformadorXLSToCSV.convertxlstoCSV_NotNull(inputStream);
+            Workbook wb = WorkbookFactory.create(inputStream);
+            TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV(wb);
+            outputStream = transformadorXLSToCSV.convertxlstoCSV_NotNull();
         } catch(IOException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidFormatException ex) {

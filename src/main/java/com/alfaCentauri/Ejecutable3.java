@@ -13,7 +13,7 @@ public class Ejecutable3 {
      */
     public static void main(String[] args) {
         TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV();
-        String ruta = "data/846 - Foto de stock contingencia.xlsx";
+        String ruta = "data/pruebas.xls";
         InputStream inputStream = null;
         InputStream outputStream = null;
         try{

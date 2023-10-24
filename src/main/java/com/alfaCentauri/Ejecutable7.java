@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class Ejecutable7 {
     public static void main(String[] args) {
-        String ruta = "data/LPFA2_STOCK.xls";
+        String ruta = "data/pruebas.xls";
         try {
             FileInputStream file = new FileInputStream(new File(ruta));
 
