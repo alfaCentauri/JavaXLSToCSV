@@ -167,6 +167,7 @@ public class TransformadorXLSToCSV {
                 } else {
                     DataFormatter formatoDatos = new DataFormatter();
                     result = formatoDatos.formatCellValue(currentCell);
+                    result = result.replace(",", ".");
                 }
                 break;
             case BLANK:
