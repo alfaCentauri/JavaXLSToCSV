@@ -28,7 +28,7 @@ public class Ejecutable4 {
             Workbook wb = WorkbookFactory.create(inputStream);
             TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV(wb);
             outputStream = transformadorXLSToCSV.convertxlstoCSV_NotNull();
-            FileOutputStream out = new FileOutputStream(new File("data/output/procesaddo.csv") );
+            FileOutputStream out = new FileOutputStream(new File("data/output/procesado4.csv") );
             out.write(outputStream.readAllBytes());
             out.close();
         } catch(IOException ex) {

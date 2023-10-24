@@ -45,6 +45,9 @@ public class Ejecutable5 {
             else {
                 System.out.println("Error: Nulo");
             }
+            FileOutputStream out = new FileOutputStream(new File("data/output/procesado5.csv") );
+            out.write(result.readAllBytes());
+            out.close();
         } catch (IOException | InvalidFormatException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

@@ -55,7 +55,6 @@ public class TransformadorXLSToCSV {
 
     /**
      *
-     * @param inputStream
      * @return Regresa un inputStream con el contenido del archivo CSV.
      * @throws IOException
      * @throws InvalidFormatException

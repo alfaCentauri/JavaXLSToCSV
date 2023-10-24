@@ -19,6 +19,9 @@ public class Ejecutable3 {
         try{
             inputStream = new FileInputStream(ruta);
             outputStream = transformadorXLSToCSV.convertxlstoCSV(inputStream);
+            FileOutputStream out = new FileOutputStream(new File("data/output/procesado3.csv") );
+            out.write(outputStream.readAllBytes());
+            out.close();
         } catch( FileNotFoundException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } catch( IOException ex) {
