@@ -27,9 +27,10 @@ public class Ejecutable5 {
      */
     public static void main(String[] args) {
         TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV();
-        String ruta = "data/LPFA2_STOCK.xls";
+        String ruta = "data/pruebas.xls";
         File archivo = new File("input.xlsx");
         InputStream inputStream = null;
+        InputStream result = null;
         try {
             inputStream = new FileInputStream(ruta);
             Workbook wb = WorkbookFactory.create(inputStream);
@@ -39,7 +40,12 @@ public class Ejecutable5 {
                 echoAsCSV(wb.getSheetAt(i));
             }
             try {
-                InputStream result = transformadorXLSToCSV.convertxlstoCSV(inputStream);
+                if (inputStream != null ) {
+                    result = transformadorXLSToCSV.convertxlstoCSV(inputStream);
+                }
+                else {
+                    System.out.println("Error: Nulo");
+                }
             } catch (IOException | InvalidFormatException e) {
                 throw new RuntimeException(e);
             }
