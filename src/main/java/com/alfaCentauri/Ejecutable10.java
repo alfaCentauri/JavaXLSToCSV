@@ -25,7 +25,7 @@ public class Ejecutable10 {
             FileOutputStream out = new FileOutputStream(new File(ruta));
             workbook.write(out);
             out.close();
-            System.out.println("Se guardó correctamente en el disco.");
+            System.out.println("Se guardó correctamente en el disco.\n" + ruta);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,7 +13,7 @@ public class Ejecutable11 {
     /** Cuerpo del programa. **/
     public static void main(String[] args) {
         System.out.println("Ejemplo de ejecución de libreria Apache POI.\n");
-        String ruta = "data/pruebas10.xls";
+        String ruta = "data/pruebas11.xls";
         //Blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();
 
@@ -25,7 +25,7 @@ public class Ejecutable11 {
             FileOutputStream out = new FileOutputStream(new File(ruta));
             workbook.write(out);
             out.close();
-            System.out.println("Se guardó correctamente en el disco.");
+            System.out.println("Se guardó correctamente en el disco.\n" + ruta);
         } catch (Exception e) {
             e.printStackTrace();
         }
