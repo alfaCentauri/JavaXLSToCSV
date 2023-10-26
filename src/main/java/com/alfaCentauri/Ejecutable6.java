@@ -48,7 +48,7 @@ public class Ejecutable6 {
         try
         {
             //Write the workbook in file system
-            FileOutputStream out = new FileOutputStream(new File("howtodoinjava_demo.xls"));
+            FileOutputStream out = new FileOutputStream(new File("data/output/howtodoinjava_demo.xls"));
             workbook.write(out);
             out.close();
             System.out.println("howtodoinjava_demo.xlsx written successfully on disk.");

@@ -13,12 +13,15 @@ public class Ejecutable3 {
      */
     public static void main(String[] args) {
         TransformadorXLSToCSV transformadorXLSToCSV = new TransformadorXLSToCSV();
-        String ruta = "data/846 - Foto de stock contingencia.xlsx";
+        String ruta = "data/pruebas.xls";
         InputStream inputStream = null;
         InputStream outputStream = null;
         try{
             inputStream = new FileInputStream(ruta);
             outputStream = transformadorXLSToCSV.convertxlstoCSV(inputStream);
+            FileOutputStream out = new FileOutputStream(new File("data/output/procesado3.csv") );
+            out.write(outputStream.readAllBytes());
+            out.close();
         } catch( FileNotFoundException ex) {
             Logger.getLogger(Ejecutable.class.getName()).log(Level.SEVERE, null, ex);
         } catch( IOException ex) {

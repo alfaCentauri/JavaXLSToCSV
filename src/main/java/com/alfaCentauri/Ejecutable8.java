@@ -1,15 +1,16 @@
 package com.alfaCentauri;
 
+import org.apache.poi.ss.formula.EvaluationCell;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Iterator;
 
-public class Ejecutable7 {
+public class Ejecutable8 {
+    /** Cuerpo del programa. **/
     public static void main(String[] args) {
+        System.out.println("Ejemplo de ejecución de libreria Apache POI.\n");
         String ruta = "data/pruebas.xls";
         try {
             FileInputStream file = new FileInputStream(new File(ruta));
@@ -25,13 +26,17 @@ public class Ejecutable7 {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
+                    FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
                     //Check the cell type and format accordingly
-                    switch (cell.getCellType())  {
+                    switch (evaluator.evaluateInCell(cell).getCellType())  {
                         case NUMERIC:
                             System.out.print(cell.getNumericCellValue() + "t");
                             break;
                         case STRING:
                             System.out.print(cell.getStringCellValue() + "t");
+                            break;
+                        case FORMULA:
+                            //Not again
                             break;
                     }
                 }
@@ -43,4 +48,5 @@ public class Ejecutable7 {
         }
         System.out.println("Final de la prueba.");
     }
+
 }

@@ -1,6 +1,9 @@
 package com.alfaCentauri;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +25,9 @@ class TransformadorXLSToCSVTest {
 
     @BeforeEach
     void setUp() {
+        ruta = "data/prueba.xls";
+        inputStream = null;
+        outputStream = null;
     }
 
     @Test
@@ -82,6 +88,7 @@ class TransformadorXLSToCSVTest {
                         try {
                             inputStream.close();
                         } catch (IOException ex) {
+                            System.out.println("Falla del metodo.\n" + ex.getMessage());
                             Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -89,6 +96,95 @@ class TransformadorXLSToCSVTest {
                 "Error: In test convertxlstoCSVWithNull."
         );
         assertEquals("Cannot invoke \"java.io.InputStream.close()\" because \"this.inputStream\" is null", exception.getMessage());
+        System.out.println("Prueba OK");
+    }
+
+    @Test
+    void convertxlstoCSVWithFile_ShouldSuccess() {
+        transformadorXLSToCSV = new TransformadorXLSToCSV();
+        ruta = "data/pruebas.xls";
+        inputStream = null;
+        outputStream = null;
+        //Basic with file exist
+        try{
+            inputStream = new FileInputStream(ruta);
+            outputStream = transformadorXLSToCSV.convertxlstoCSV(inputStream);
+            assertNotNull(outputStream, "Error on convertxlstoCSVWithNull");
+        } catch( FileNotFoundException ex) {
+            System.out.println("Falla del metodo. Prueba de FileNotFoundException\n" + ex.getMessage());
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch( IOException ex) {
+            System.out.println("Falla del metodo. Prueba de IOException\n" + ex.getMessage());
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidFormatException ex) {
+            System.out.println("Falla del metodo. Prueba de InvalidFormatException\n" + ex.getMessage());
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                System.out.println("Falla del metodo.\n" + ex.getMessage());
+                Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        //assertEquals("Cannot invoke \"java.io.InputStream.close()\" because \"this.inputStream\" is null", exception.getMessage());
+        System.out.println("Prueba OK");
+    }
+
+    @Test
+    void getLastNumberColumnWithFile_ShouldSuccess() {
+        transformadorXLSToCSV = new TransformadorXLSToCSV();
+        ruta = "data/pruebas.xls";
+        inputStream = null;
+        outputStream = null;
+        //Basic with file exist
+        try{
+            inputStream = new FileInputStream(ruta);
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            int result = transformadorXLSToCSV.getLastNumberColumn(sheet);
+            assertEquals(6, result);
+        } catch( FileNotFoundException ex) {
+            System.err.println("Falla del metodo. Prueba de FileNotFoundException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch( IOException ex) {
+            System.err.println("Falla del metodo. Prueba de IOException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        System.out.println("Prueba OK");
+    }
+
+    @Test
+    void getColumnCount_ShouldSuccess() {
+        transformadorXLSToCSV = new TransformadorXLSToCSV();
+        ruta = "data/pruebas.xls";
+        inputStream = null;
+        outputStream = null;
+        //Basic with file exist
+        try{
+            inputStream = new FileInputStream(ruta);
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            transformadorXLSToCSV = new TransformadorXLSToCSV(workbook);
+            int result = transformadorXLSToCSV.getColumnCount(0);
+            assertEquals(6, result);
+        } catch( FileNotFoundException ex) {
+            System.err.println("Falla del metodo. Prueba de FileNotFoundException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch( IOException ex) {
+            System.err.println("Falla del metodo. Prueba de IOException");
+            Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(TransformadorXLSToCSVTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         System.out.println("Prueba OK");
     }
 }

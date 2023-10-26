@@ -1,10 +1,8 @@
 package com.alfaCentauri;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.poi.ss.usermodel.DateUtil;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.util.Iterator;
+
+import static org.apache.poi.ss.usermodel.CellType.FORMULA;
 
 public class TransformadorXLSToCSV {
-    
+
     private FileInputStream file;
 
     private String urlPath;
@@ -29,7 +29,7 @@ public class TransformadorXLSToCSV {
 
     private Cell cell;
 
-    /** **/
+    /** Construct **/
     public TransformadorXLSToCSV() {
         workbook = null;
         sheet = null;
@@ -37,6 +37,10 @@ public class TransformadorXLSToCSV {
         urlPath = "pruebas.xlsx";
     }
 
+    public TransformadorXLSToCSV(Workbook wb) {
+        workbook = wb;
+        sheet = workbook.getSheetAt(0);
+    }
     /**
      *
      * @param inputStream
@@ -51,13 +55,12 @@ public class TransformadorXLSToCSV {
 
     /**
      *
-     * @param inputStream
      * @return Regresa un inputStream con el contenido del archivo CSV.
      * @throws IOException
      * @throws InvalidFormatException
      **/
-    public InputStream convertxlstoCSV_NotNull(InputStream inputStream) throws IOException, InvalidFormatException {
-        workbook = WorkbookFactory.create(inputStream);
+    public InputStream convertxlstoCSV_NotNull() throws IOException, InvalidFormatException {
+//        workbook = WorkbookFactory.create(inputStream);
         sheet = workbook.getSheetAt(0);
         return  csvConverter_notNull();
     }
@@ -66,12 +69,13 @@ public class TransformadorXLSToCSV {
      * @param sheet Type Sheet.
      * @return Return a inputStream.
      **/
-    private InputStream csvConverter(Sheet sheet) {
+    protected InputStream csvConverter(Sheet sheet) {
         String str = new String();
         for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
             String rowString = new String();
-            for (int j = 0; j < 3 && row != null; j++) {
+            int maxColumna = 6;
+            for (int j = 0; j < maxColumna && row != null; j++) {
                 if(row.getCell(j)==null) {
                     rowString = rowString + Utility.BLANK_SPACE + Utility.COMMA;
                 }
@@ -86,6 +90,27 @@ public class TransformadorXLSToCSV {
     }
 
     /**
+     * Get max columns.
+     * @param sheet Type Sheet.
+     * @return Return a integer with number of columns.
+     **/
+    protected int getLastNumberColumn(Sheet sheet) {
+        int count = 0;
+        Row currentRow = sheet.getRow(0);
+        if ( currentRow != null ) {
+            Iterator iteratorCell = currentRow.cellIterator();
+            while (iteratorCell.hasNext()) {
+                Cell valueCell = currentRow.getCell(count);
+                if (valueCell != null && !valueCell.getStringCellValue().isBlank())
+                    count++;
+                else
+                    break;
+            }
+        }
+        return count;
+    }
+
+    /**
      * @return Return a inputStream.
      **/
     protected InputStream csvConverter_notNull() {
@@ -96,7 +121,6 @@ public class TransformadorXLSToCSV {
                 int maxColumnNumbers = this.getColumnCount(i);
                 String rowString = new String();
                 for (int j = 0; j < maxColumnNumbers && row != null; j++) {
-                    cell = row.getCell(0);
                     rowString = getStringToRow(row, rowString, j);
                 }
                 if (rowString.length() > 0)
@@ -110,38 +134,24 @@ public class TransformadorXLSToCSV {
     }
 
     private String getStringToRow(Row row, String rowString, int j) {
-        if ( cell != null && !cell.getStringCellValue().equals("") ) {
+        cell = row.getCell(0);
+        if ( cell != null ) {
             if (row.getCell(j) == null) {//Refactorizar
                 rowString = rowString + Utility.BLANK_SPACE + Utility.COMMA;
             } else {
-                rowString = rowString + getDataFormatt(j, 21) + Utility.COMMA;
+                rowString = rowString + getDataFormatt(j) + Utility.COMMA;
             }
         }
         return rowString;
     }
 
     /**
-     *
      * @param j Type int.
-     * @param columnDate Type int.
      * @return Return a string with data of cell.
      **/
-    protected String getDataFormatt(int j, int columnDate) {
+    protected String getDataFormatt(int j) {
         String result="";
         Cell currentCell = row.getCell(j);
-        //Debug
-//        System.out.print("Tipo de dato #" + j + ": ");
-//        System.out.println(currentCell.getCellType());
-//        System.out.print("Dato actual#" + j + ": ");
-//        if (HSSFDateUtil.isCellDateFormatted(row.getCell(0))) {
-//            System.out.println ("Row No.: " + row.getRowNum ()+ " " +
-//                    row.getCell(0).getDateCellValue());
-//        }
-//        if (currentCell.getCellType().equals(CellType.NUMERIC)) {
-//            result = String.valueOf( currentCell.getNumericCellValue() );
-//            System.out.println(result);
-//
-//        }
         switch (currentCell.getCellType()) {
             case STRING:
                 result = currentCell.getStringCellValue();
@@ -156,17 +166,26 @@ public class TransformadorXLSToCSV {
                 } else {
                     DataFormatter formatoDatos = new DataFormatter();
                     result = formatoDatos.formatCellValue(currentCell);
+                    result = result.replace(",", ".");
                 }
                 break;
             case BLANK:
                 System.out.println("Blank");
                 break;
             case BOOLEAN:
+                result = String.valueOf( currentCell.getBooleanCellValue() );
                 System.out.println("Boolean");
                 break;
             case FORMULA:
                 var formula = currentCell.getCellFormula();
-                System.out.println( formula );
+                System.out.println("Formula: " + formula );
+                //
+                try {
+                    Double valueCell = currentCell.getNumericCellValue();
+                    result = String.valueOf(valueCell);
+                } catch (Exception error) {
+                    System.err.println("Error la formula no puede ser resuelta.\n" + error.getMessage());
+                }
                 break;
             case ERROR:
                 System.out.println("Error");
@@ -178,8 +197,8 @@ public class TransformadorXLSToCSV {
     }
 
     /**
-     *
-     * @param idSheet
+     * Get column count.
+     * @param idSheet Type int.
      * @return Return a integer more zero if exist.
      **/
     protected int getColumnCount( int idSheet ) {
@@ -215,4 +234,27 @@ public class TransformadorXLSToCSV {
         workbook = new XSSFWorkbook(file);
         file.close();
     }
+
+    /**
+     * Re-calculating all formulas in a Workbook
+     *
+     * @param fis Tyype FileInputStream.
+     * @return Return a Workbook with values.
+     * @throws IOException
+     */
+    protected Workbook reCalculatingAllFormulasInAWorkbook(FileInputStream fis) throws IOException {
+        Workbook wb = new HSSFWorkbook(fis); //or new XSSFWorkbook("/somepath/test.xls")
+        FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
+        for (Sheet sheet : wb) {
+            for (Row r : sheet) {
+                for (Cell c : r) {
+                    if (c.getCellType() == FORMULA) {
+                        evaluator.evaluateFormulaCell(c);
+                    }
+                }
+            }
+        }
+        return workbook;
+    }
+
 }
