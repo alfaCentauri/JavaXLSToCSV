@@ -11,8 +11,8 @@ public class Ejecutable12 {
     /** Cuerpo del programa. **/
     public static void main(String[] args) {
         System.out.println("Ejemplo de ejecución de libreria Apache POI.\n");
-        System.out.println("Leer multiples hojas de un libro de calculo.");
-        String ruta = "data/pruebas.xls";
+        System.out.println("Leer multiples hojas de un libro de cálculo.");
+        String ruta = "data/pruebas.xlsx";
         try {
             FileInputStream file = new FileInputStream(new File(ruta));
             //Create Workbook instance holding reference to .xlsx file
@@ -20,27 +20,43 @@ public class Ejecutable12 {
             //Get first/desired sheet from the workbook
             Sheet sheet = workbook.getSheetAt(0);
             int countSheets = workbook.getNumberOfSheets();
+            String nombreHoja = workbook.getSheetName(0);
+            int numberRow = 1;
             System.out.println("Cantidad de hojas en el libro: " + countSheets);
             //Iterate through each rows one by one
             Iterator<Row> rowIterator = sheet.iterator();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
+                //Identificando la linea
+                System.out.println("Hoja: " + nombreHoja);
+                System.out.print("Fila #" + numberRow++);
+                System.out.print(";");
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
                     FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
                     //Check the cell type and format accordingly
-                    switch (evaluator.evaluateInCell(cell).getCellType())  {
+                    switch (evaluator.evaluateInCell(cell).getCellType())  {/* Se evaluan las formulas antes de seleccionar el case */
                         case NUMERIC:
-                            System.out.println(cell.getNumericCellValue() );
+                            System.out.print(cell.getNumericCellValue() + ";");
                             break;
                         case STRING:
-                            System.out.println(cell.getStringCellValue() );
+                            System.out.print(cell.getStringCellValue() + ";");
                             break;
-                        case FORMULA:
-                            String nombreHoja = workbook.getSheetName(0); 
-                            System.out.println("El nombre de la hoja es " + nombreHoja + ". Contiene formula." );
+                        case BLANK:
+                            System.out.print("Blank;");
+                            break;
+                        case BOOLEAN:
+                            String result = String.valueOf( cell.getBooleanCellValue() );
+                            System.out.print("Boolean: " + result + ";");
+                            break;
+                        case ERROR:
+                            String messageError = String.valueOf( cell.getErrorCellValue() );
+                            System.out.print("Error: " + messageError + ";");
+                            break;
+                        default:
+                            System.out.print("El nombre de la hoja es " + nombreHoja + ". Contiene otros.;");
                             break;
                     }
                 }
@@ -48,6 +64,7 @@ public class Ejecutable12 {
             }
             file.close();
         } catch (Exception e) {
+            System.err.println("Fallo en: " + e.getMessage());
             e.printStackTrace();
         }
         System.out.println("Final de la prueba.");
