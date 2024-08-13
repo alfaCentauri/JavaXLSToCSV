@@ -20,6 +20,8 @@ Ejemplo en Java para convertir un documento de Excel a CSV con la librería Apac
 
 ## Instalación
 * Compile el proyecto con el IDE de su preferencia.
+* Deberá crear una carpeta en la raiz del proyecto con el nombre "data".
+* En la carpeta /data/ se guardan los archivos de pruebas para los ejemplos.
 * Ejecute desde la consola; en la raíz del proyecto, java Ejecutable.jar
 
 ## Authors and acknowledgment
